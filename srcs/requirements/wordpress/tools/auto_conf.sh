@@ -39,7 +39,7 @@ fi
 if ! wp core is-installed --path="$WP_PATH" --allow-root; then
     wp core install \
         --path="$WP_PATH" \
-        --url="http://${DOMAIN_NAME}" \
+        --url="https://${DOMAIN_NAME}" \
         --title="$TITLE" \
         --admin_user="$WP_ADMIN_USER" \
         --admin_password="$WP_ADMIN_PASSWORD" \
@@ -57,8 +57,7 @@ fi
 echo "[======== WP READY ========]"
 
 # PHP-FPM config
-sed -i 's|listen = /run/php/php7.4-fpm.sock|listen = 9000|g' /etc/php/7.4/fpm/pool.d/www.conf
 
 mkdir -p /run/php
 
-exec /usr/sbin/php-fpm7.4 -F -R
+exec /usr/sbin/php-fpm8.2 -F -R

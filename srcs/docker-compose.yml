@@ -1,5 +1,8 @@
+version: '3.8'
+
 services:
   nginx :
+    image: nginx
     depends_on :
      - wordpress
     container_name: nginx
@@ -13,6 +16,7 @@ services:
     volumes:
       - wordpress_data:/var/www/html/wordpress
   wordpress :
+    image: wordpress
     depends_on :
      - mariadb
     container_name : wordpress
@@ -24,6 +28,7 @@ services:
     volumes:
       - wordpress_data:/var/www/html/wordpress
   mariadb :
+    image: mariadb
     container_name: mariadb
     build: requirements/mariadb
     restart: always
@@ -43,14 +48,14 @@ volumes:
     driver: local
     driver_opts:
       type: none
-      device: "/home/dems/data/wordpress_data"
+      device: "/home/${USER}/data/wordpress_data"
       o: bind
 
   mariadb_data:
     driver: local
     driver_opts:
       type: none
-      device: "/home/dems/data/mariadb_data"
+      device: "/home/${USER}/data/mariadb_data"
       o: bind
 
 
