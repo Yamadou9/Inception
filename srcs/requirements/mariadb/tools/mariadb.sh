@@ -8,7 +8,7 @@ until mysqladmin ping --silent 2>/dev/null; do
 done
 
 # N'init que si la DB n'existe pas déjà
-if ! mysql -u root -e "USE \`${SQL_DATABASE}\`;" 2>/dev/null; then
+if ! mysql -u root -p"${SQL_ROOT_PASSWORD}" -e "USE \`${SQL_DATABASE}\`;" 2>/dev/null; then
     mysql -u root <<EOF
 CREATE DATABASE IF NOT EXISTS \`${SQL_DATABASE}\`;
 CREATE USER IF NOT EXISTS \`${SQL_USER}\`@'%' IDENTIFIED BY '${SQL_PASSWORD}';
