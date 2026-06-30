@@ -20,7 +20,7 @@ clean:
 	docker compose -f $(COMPOSE_FILE) --env-file $(ENV_FILE) down --rmi all
 
 fclean: clean
-	docker volume rm $(shell docker volume ls -q) 2>/dev/null || true
+	docker volume rm wordpress_data mariadb_data 2>/dev/null || true
 	sudo rm -rf $(DATA_DIR)
 
 re: fclean all

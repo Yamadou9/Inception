@@ -2,16 +2,14 @@
 
 set -e
 
-sleep 5
-
-# Install WP-CLI if not present
-if ! command -v wp >/dev/null 2>&1; then
-    curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
-    chmod +x wp-cli.phar
-    mv wp-cli.phar /usr/local/bin/wp
-fi
 
 WP_PATH="/var/www/html/wordpress"
+
+until mysqladmin ping -h mariadb --silent 2>/dev/null; do
+    echo "waiting for mariadb..."
+    sleep 2
+done
+
 
 mkdir -p "$WP_PATH"
 chown -R www-data:www-data /var/www/html
@@ -19,12 +17,10 @@ chmod -R 755 /var/www/html
 
 echo "[======== WP INSTALLATION STARTED ========]"
 
-# Download WordPress only if missing
 if [ ! -f "$WP_PATH/wp-load.php" ]; then
     wp core download --path="$WP_PATH" --allow-root
 fi
 
-# Create config only if missing
 if [ ! -f "$WP_PATH/wp-config.php" ]; then
     wp core config \
         --path="$WP_PATH" \
@@ -35,7 +31,6 @@ if [ ! -f "$WP_PATH/wp-config.php" ]; then
         --allow-root
 fi
 
-# Install WordPress only once
 if ! wp core is-installed --path="$WP_PATH" --allow-root; then
     wp core install \
         --path="$WP_PATH" \
@@ -55,8 +50,6 @@ if ! wp core is-installed --path="$WP_PATH" --allow-root; then
 fi
 
 echo "[======== WP READY ========]"
-
-# PHP-FPM config
 
 mkdir -p /run/php
 
